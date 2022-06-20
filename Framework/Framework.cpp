@@ -111,12 +111,12 @@ namespace Application
     ImGui::SFML::Update(*window, elapsed);
     // TODO: Re-Enable dockspace when figured out how to render into viewPort
     // ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-  
+    // this needs to be beneath the dockbar for it to be dockable
     app->update(elapsed);
     
-    ImGui::Begin("Main");
-    viewPort = ImGui::GetWindowViewport();
-    ImGui::End();
+    // ImGui::Begin("Main");
+    // viewPort = ImGui::GetWindowViewport();
+    // ImGui::End();
   }
   
   void Framework::draw()
