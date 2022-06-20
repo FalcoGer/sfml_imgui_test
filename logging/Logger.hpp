@@ -15,8 +15,6 @@ namespace Logger
     private:
     protected:
         const std::string name;
-
-    protected:
         typedef std::experimental::source_location sl;
         
         [[nodiscard]]

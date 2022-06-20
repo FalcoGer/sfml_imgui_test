@@ -1,16 +1,17 @@
 #include <iostream>
 
-#include "imgui.h"
-#include "backends/imgui_impl_sdl.h"
-#include "backends/imgui_impl_sdlrenderer.h"
-
+#include "MyApplication.hpp"
 #include "logging/ConsoleLogger.hpp"
 
 int main() {
-  auto logger = std::unique_ptr<Logger::Logger>(new Logger::ConsoleLogger("stdout"));
+  auto logger = std::shared_ptr<Logger::Logger>(new Logger::ConsoleLogger("stdout"));
   
-  // init SDL
+  // init graphics library
+  const unsigned int W = 800, H = 600;
+  const std::string TITLE = "SFML_IMGUI_TEST";
   
+  Application::Framework framework(new Application::MyApplication(W,H,TITLE,logger));
+  framework.run();
   
   return 0;
 }
