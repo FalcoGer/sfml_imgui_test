@@ -13,10 +13,7 @@ namespace Application
       MyApplication(const unsigned int width, const unsigned int height, const std::string& title, std::shared_ptr<Logger::Logger> logger);
       ~MyApplication() = default;
     
-      void handleSFMLEvent(const sf::Event& ev) override;
-    
-      unsigned int handleImGUIEvents() override;
-    
+      void handleEvent(const sf::Event& ev) override;
       void update(const sf::Time& elapsed) override;
   
     protected:
@@ -24,6 +21,9 @@ namespace Application
     private:
       sf::RectangleShape bouncySquare;
       sf::Vector2f bouncySquareSpeed;
+      float colorf[3] = {1.0f, 1.0f, 1.0f};
+      
+      bool demoWindowOpen;
   };
   
 } // Application

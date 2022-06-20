@@ -16,12 +16,14 @@ namespace Application
     window{new sf::RenderWindow(sf::VideoMode(application->getSize().x, application->getSize().y), application->getTitle(), sf::Style::Default)}
   {
     this->app = std::unique_ptr<Application>(application);
+    this->app->setWindow(window);
     // set up fps counter
     std::string fontPath = "/usr/local/share/fonts/truetype/meslolgs-nf/MesloLGS NF Regular.ttf";
     if (!font.loadFromFile(fontPath))
     {
-      logger->log(fmt::format("Cound not load Font: {}", fontPath), Logger::Logger::LogLevel::critical);
-      throw "Coudn't load font";
+      std::string err = fmt::format("Couldn't not load Font: {}", fontPath);
+      logger->log(err, Logger::Logger::LogLevel::critical);
+      throw err;
     }
     logger->log("Font loaded");
     
@@ -31,9 +33,33 @@ namespace Application
     
     window->setFramerateLimit(TARGET_FRAMERATE);
     
-    // initial draw before run() is ran
+    // setup ImGui
+    if (!ImGui::SFML::Init(*window))
+    {
+      std::string err = "Couldn't initialize ImGui";
+      logger->log(err, Logger::Logger::LogLevel::critical);
+      throw err;
+    }
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Viewports
+  
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsClassic();
+    
+    // initial draw before run() is running
     window->clear(DEFAULT_COLOR);
     window->display();
+  }
+  
+  Framework::~Framework()
+  {
+    ImGui::DestroyContext();
+    ImGui::SFML::Shutdown(*window);
   }
   
   int Framework::run()
@@ -55,7 +81,7 @@ namespace Application
     while(window->pollEvent(ev))
     {
       count++;
-      count += app->handleImGUIEvents();
+      ImGui::SFML::ProcessEvent(ev);
       switch (ev.type)
       {
         case sf::Event::Closed:
@@ -74,25 +100,35 @@ namespace Application
           break;
         }
       }
-      app->handleSFMLEvent(ev);
+      app->handleEvent(ev);
     }
     return count;
   }
   
   void Framework::update(const sf::Time& elapsed)
   {
-    app->update(elapsed);
     fpsCounter.setString(fmt::format("{0:>.5} FPS", 1.0f / elapsed.asSeconds()));
+    
+    ImGui::SFML::Update(*window, elapsed);
+    // TODO: Re-Enable dockspace when figured out how to render into viewPort
+    // ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+  
+    app->update(elapsed);
+    
+    ImGui::Begin("Main");
+    viewPort = ImGui::GetWindowViewport();
+    ImGui::End();
   }
   
   void Framework::draw()
   {
     window->clear(DEFAULT_COLOR);
     // draw the application
+    // TODO: Draw application into viewPort somehow?
     window->draw(*app);
     // draw the FPS counter
     window->draw(fpsCounter);
-    
+    ImGui::SFML::Render(*window);
     window->display();
   }
 } // Application

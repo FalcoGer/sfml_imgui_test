@@ -22,7 +22,7 @@ namespace Application
     bouncySquare.setPosition(getSize().x/2.0f, getSize().y/2.0f);
   }
   
-  void MyApplication::handleSFMLEvent(const sf::Event& ev)
+  void MyApplication::handleEvent(const sf::Event& ev)
   {
     if (ev.type == sf::Event::Resized)
     {
@@ -38,11 +38,6 @@ namespace Application
       }
       bouncySquare.setPosition(pos);
     }
-  }
-  
-  unsigned int MyApplication::handleImGUIEvents()
-  {
-    return 0;
   }
   
   void MyApplication::update(const sf::Time& elapsed)
@@ -67,6 +62,21 @@ namespace Application
     
     // move the square by it's velocity
     bouncySquare.move(bouncySquareSpeed.x * elapsed.asSeconds(), bouncySquareSpeed.y * elapsed.asSeconds());
+    // set new color
+    bouncySquare.setFillColor(sf::Color(colorf[0]*0xFF, colorf[1]*0xFF, colorf[2]*0xFF));
+    
+    // ImGui stuff here
+    ImGui::Begin("Window");
+    ImGui::Checkbox("Demo Window", &demoWindowOpen);
+    ImGui::SliderFloat("Speed X", &bouncySquareSpeed.x, -200.0f, +200.0f);
+    ImGui::SliderFloat("Speed Y", &bouncySquareSpeed.y, -200.0f, +200.0f);
+    ImGui::ColorEdit3("Color", colorf);
+    ImGui::End();
+    
+    if (demoWindowOpen)
+    {
+      ImGui::ShowDemoWindow(&demoWindowOpen);
+    }
   }
   
   void MyApplication::draw(sf::RenderTarget& target, sf::RenderStates states) const

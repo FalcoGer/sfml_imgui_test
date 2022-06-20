@@ -3,6 +3,9 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
+#include "imgui.h"
+#include "imgui-SFML.h"
+
 #include "../logging/Logger.hpp"
 
 namespace Application
@@ -13,7 +16,7 @@ namespace Application
   {
     public:
       Framework(Application* const application);
-      ~Framework() = default;
+      ~Framework();
       
       int run();
       
@@ -26,11 +29,17 @@ namespace Application
       {
         this->app = std::move(application);
       }
+      
+      [[ nodiscard ]]
+      inline std::shared_ptr<sf::RenderWindow> getWindow() const
+      {
+        return window;
+      }
   
     protected:
       std::unique_ptr<Application> app;
       
-      std::unique_ptr<sf::RenderWindow> window;
+      std::shared_ptr<sf::RenderWindow> window;
       std::shared_ptr<Logger::Logger> logger;
     
       const unsigned int TARGET_FRAMERATE;
@@ -44,6 +53,8 @@ namespace Application
       sf::Clock clk;
       sf::Text fpsCounter;
       sf::Font font;
+    
+      ImGuiViewport* viewPort;
   };
   
 } // Application

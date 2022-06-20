@@ -3,8 +3,6 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "imgui.h"
-
 #include "../logging/Logger.hpp"
 #include "Framework.hpp"
 
@@ -22,8 +20,7 @@ namespace Application
       
       virtual ~Application() = default;
       
-      virtual void handleSFMLEvent(const sf::Event& ev) = 0;
-      virtual unsigned int handleImGUIEvents() = 0;
+      virtual void handleEvent(const sf::Event& ev) = 0;
       virtual void update(const sf::Time& elapsed) = 0;
       
       [[ nodiscard ]]
@@ -32,8 +29,14 @@ namespace Application
       
       [[ nodiscard ]]
       inline std::string getTitle() const { return title; }
+      
+      inline void setWindow(std::shared_ptr<sf::RenderWindow> window)
+      {
+        this->window = window;
+      }
   
     protected:
+      std::shared_ptr<sf::RenderWindow> window;
       std::shared_ptr<Logger::Logger> logger;
       std::string title;
       sf::Vector2i size;
