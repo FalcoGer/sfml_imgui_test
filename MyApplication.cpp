@@ -1,18 +1,9 @@
-//
-// Created by paul on 20.06.22.
-//
-
 #include "MyApplication.hpp"
 
 namespace Application
 {
-  MyApplication::MyApplication(
-    const unsigned int width,
-    const unsigned int height,
-    const std::string& title,
-    std::shared_ptr<Logger::Logger> logger
-  )
-    : Application(sf::Vector2i(width, height), title, logger),
+  MyApplication::MyApplication()
+    : Application(),
     bouncySquare{sf::RectangleShape(sf::Vector2f(32.0f, 32.0f))},
     bouncySquareSpeed{100.0f, 60.0f}
   {
@@ -24,20 +15,6 @@ namespace Application
   
   void MyApplication::handleEvent(const sf::Event& ev)
   {
-    if (ev.type == sf::Event::Resized)
-    {
-      // make sure bouncy square stays within boundaries when resized.
-      sf::Vector2f pos = bouncySquare.getPosition();
-      if (ev.size.width < (pos.x + bouncySquare.getSize().x))
-      {
-        pos.x = ev.size.width - bouncySquare.getSize().x;
-      }
-      if (ev.size.height < (pos.y + bouncySquare.getSize().y))
-      {
-        pos.y = ev.size.height - bouncySquare.getSize().y;
-      }
-      bouncySquare.setPosition(pos);
-    }
   }
   
   void MyApplication::update(const sf::Time& elapsed)
@@ -59,6 +36,17 @@ namespace Application
     {
       bouncySquareSpeed.y = -bouncySquareSpeed.y;
     }
+  
+    // make sure bouncy square stays within boundaries when resized.
+    if (target->getSize().x < (pos.x + bouncySquare.getSize().x))
+    {
+      pos.x = target->getSize().x - bouncySquare.getSize().x;
+    }
+    if (target->getSize().y < (pos.y + bouncySquare.getSize().y))
+    {
+      pos.y = target->getSize().y - bouncySquare.getSize().y;
+    }
+    bouncySquare.setPosition(pos);
     
     // move the square by it's velocity
     bouncySquare.move(bouncySquareSpeed.x * elapsed.asSeconds(), bouncySquareSpeed.y * elapsed.asSeconds());

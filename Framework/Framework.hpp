@@ -15,15 +15,10 @@ namespace Application
   class Framework
   {
     public:
-      Framework(Application* const application);
+      Framework(const unsigned int W, const unsigned int H, const std::string& TITLE, Application* const application);
       ~Framework();
       
       int run();
-      
-      std::shared_ptr<Logger::Logger> getLogger() const
-      {
-        return this->logger;
-      }
     
       inline void setApplication(std::unique_ptr<Application> application)
       {
@@ -40,7 +35,6 @@ namespace Application
       std::unique_ptr<Application> app;
       
       std::shared_ptr<sf::RenderWindow> window;
-      std::shared_ptr<Logger::Logger> logger;
     
       const unsigned int TARGET_FRAMERATE;
       const sf::Color DEFAULT_COLOR;
@@ -53,8 +47,6 @@ namespace Application
       sf::Clock clk;
       sf::Text fpsCounter;
       sf::Font font;
-    
-      ImGuiViewport* viewPort;
   };
   
 } // Application

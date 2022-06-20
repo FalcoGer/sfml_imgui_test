@@ -9,23 +9,21 @@
 
 namespace Application
 {
-  Framework::Framework(Application* const application)
+  Framework::Framework(const unsigned int W, const unsigned int H, const std::string& TITLE, Application* const application)
   : TARGET_FRAMERATE{60},
     DEFAULT_COLOR{sf::Color(0x10, 0x10, 0x30, 0xFF)},
-    logger{new Logger::ConsoleLogger(application->getTitle())},
-    window{new sf::RenderWindow(sf::VideoMode(application->getSize().x, application->getSize().y), application->getTitle(), sf::Style::Default)}
+    window{new sf::RenderWindow(sf::VideoMode(W, H), TITLE, sf::Style::Default)}
   {
     this->app = std::unique_ptr<Application>(application);
-    this->app->setWindow(window);
     // set up fps counter
     std::string fontPath = "resources/fonts/MesloLGS NF Regular.ttf";
     if (!font.loadFromFile(fontPath))
     {
       std::string err = fmt::format("Couldn't not load Font: {}", fontPath);
-      logger->log(err, Logger::Logger::LogLevel::critical);
+      app->getLogger()->log(err, Logger::Logger::LogLevel::critical);
       throw err;
     }
-    logger->log("Font loaded");
+    app->getLogger()->log("Font loaded");
     
     fpsCounter = sf::Text("", font);
     fpsCounter.setFillColor(sf::Color::Red);
@@ -37,7 +35,7 @@ namespace Application
     if (!ImGui::SFML::Init(*window))
     {
       std::string err = "Couldn't initialize ImGui";
-      logger->log(err, Logger::Logger::LogLevel::critical);
+      app->getLogger()->log(err, Logger::Logger::LogLevel::critical);
       throw err;
     }
     ImGui::CreateContext();
@@ -54,6 +52,8 @@ namespace Application
     // initial draw before run() is running
     window->clear(DEFAULT_COLOR);
     window->display();
+    
+    app->getTarget()->clear(DEFAULT_COLOR);
   }
   
   Framework::~Framework()
@@ -90,8 +90,9 @@ namespace Application
         }
         case sf::Event::Resized:
         {
-          app->setSize(sf::Vector2i(ev.size.width, ev.size.height));
-          // prevent distortion when the windows is resized
+          // app resize is handled by "Main" window in update
+          
+          // prevent distortion when the window is resized
           window->setView(sf::View(sf::Rect<float>(0,0,ev.size.width, ev.size.height)));
         }
         default:
@@ -109,24 +110,29 @@ namespace Application
     fpsCounter.setString(fmt::format("{0:>.5} FPS", 1.0f / elapsed.asSeconds()));
     
     ImGui::SFML::Update(*window, elapsed);
-    // TODO: Re-Enable dockspace when figured out how to render into viewPort
-    // ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-    // this needs to be beneath the dockbar for it to be dockable
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+    // this needs to be beneath the dockspace generation for it to be dockable
     app->update(elapsed);
     
-    // ImGui::Begin("Main");
-    // viewPort = ImGui::GetWindowViewport();
-    // ImGui::End();
+    ImGui::Begin("Main");
+    ImVec2 imSize = ImGui::GetContentRegionAvail();
+    app->setSize(sf::Vector2u(imSize.x, imSize.y));
+    ImGui::Image(*(app->getTarget()));
+    ImGui::End();
   }
   
   void Framework::draw()
   {
-    window->clear(DEFAULT_COLOR);
     // draw the application
-    // TODO: Draw application into viewPort somehow?
-    window->draw(*app);
+    app->getTarget()->clear(DEFAULT_COLOR);
+    app->getTarget()->draw(*app);
+    app->getTarget()->display();
+    
     // draw the FPS counter
     window->draw(fpsCounter);
+    
+    // draw the window
+    window->clear(DEFAULT_COLOR);
     ImGui::SFML::Render(*window);
     window->display();
   }

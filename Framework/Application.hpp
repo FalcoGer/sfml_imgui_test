@@ -3,8 +3,8 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "../logging/Logger.hpp"
 #include "Framework.hpp"
+#include "../logging/ConsoleLogger.hpp"
 
 
 namespace Application
@@ -12,9 +12,8 @@ namespace Application
   class Application : public sf::Transformable, public sf::Drawable
   {
     public:
-      Application() = delete;
-      explicit Application(const sf::Vector2i size, const std::string& title, std::shared_ptr<Logger::Logger> logger)
-      : size{size}, title{title}, logger{logger}
+      Application()
+      : target{new sf::RenderTexture()}, logger{new Logger::ConsoleLogger("Application")}
       {
       }
       
@@ -24,22 +23,31 @@ namespace Application
       virtual void update(const sf::Time& elapsed) = 0;
       
       [[ nodiscard ]]
-      inline sf::Vector2i getSize() const { return size; }
-      inline void setSize(const sf::Vector2i& size) { this->size = size; }
+      inline sf::Vector2u getSize() const { return target->getSize(); }
+      inline void setSize(const sf::Vector2u& size)
+      {
+        [[ unlikely ]]
+        if (target->getSize().x != size.x || target->getSize().y != size.y)
+        {
+          // only create a new rendertexture if necessary
+          target->create(size.x, size.y);
+        }
+      }
+      
+      inline void setTarget(std::shared_ptr<sf::RenderTexture> target)
+      {
+        this->target = target;
+      }
       
       [[ nodiscard ]]
-      inline std::string getTitle() const { return title; }
+      inline std::shared_ptr<sf::RenderTexture> getTarget() const { return this->target; }
       
-      inline void setWindow(std::shared_ptr<sf::RenderWindow> window)
-      {
-        this->window = window;
-      }
+      [[ nodiscard ]]
+      inline std::shared_ptr<Logger::Logger> getLogger() const { return this->logger; }
   
     protected:
-      std::shared_ptr<sf::RenderWindow> window;
+      std::shared_ptr<sf::RenderTexture> target;
       std::shared_ptr<Logger::Logger> logger;
-      std::string title;
-      sf::Vector2i size;
   };
 }
 

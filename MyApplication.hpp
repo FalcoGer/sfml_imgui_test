@@ -9,8 +9,7 @@ namespace Application
   class MyApplication : public Application
   {
     public:
-      MyApplication() = delete;
-      MyApplication(const unsigned int width, const unsigned int height, const std::string& title, std::shared_ptr<Logger::Logger> logger);
+      MyApplication();
       ~MyApplication() = default;
     
       void handleEvent(const sf::Event& ev) override;
