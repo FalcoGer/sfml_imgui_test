@@ -29,6 +29,9 @@ set(APPLICATION_SOURCE_FILES
         MyApplication.hpp
         )
 
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 include_directories(imgui_test
         ${APPLICATION_INCLUDE}
         ${IMGUI_DIR}

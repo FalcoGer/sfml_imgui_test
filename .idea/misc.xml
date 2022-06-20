@@ -2,6 +2,10 @@
 <project version="4">
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
   <component name="CidrRootsConfiguration">
+    <sourceRoots>
+      <file path="$PROJECT_DIR$/Framework" />
+      <file path="$PROJECT_DIR$/logging" />
+    </sourceRoots>
     <excludeRoots>
       <file path="$PROJECT_DIR$/imgui" />
       <file path="$PROJECT_DIR$/imgui-sfml" />

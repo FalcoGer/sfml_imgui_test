@@ -18,7 +18,7 @@ namespace Application
     this->app = std::unique_ptr<Application>(application);
     this->app->setWindow(window);
     // set up fps counter
-    std::string fontPath = "/usr/local/share/fonts/truetype/meslolgs-nf/MesloLGS NF Regular.ttf";
+    std::string fontPath = "resources/fonts/MesloLGS NF Regular.ttf";
     if (!font.loadFromFile(fontPath))
     {
       std::string err = fmt::format("Couldn't not load Font: {}", fontPath);
@@ -58,7 +58,6 @@ namespace Application
   
   Framework::~Framework()
   {
-    ImGui::DestroyContext();
     ImGui::SFML::Shutdown(*window);
   }
   
