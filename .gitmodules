@@ -2,3 +2,6 @@
 	path = imgui
 	url = git@github.com:ocornut/imgui.git
 	branch = docking
+[submodule "imgui-sfml"]
+	path = imgui-sfml
+	url = git@github.com:eliasdaler/imgui-sfml.git
