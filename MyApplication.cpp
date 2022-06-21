@@ -47,7 +47,7 @@ namespace Application
     }
     bouncySquare.setPosition(pos);
     
-    // move the square by it's velocity
+    // move the square by its velocity
     bouncySquare.move(bouncySquareSpeed.x * elapsed.asSeconds(), bouncySquareSpeed.y * elapsed.asSeconds());
     pos = bouncySquare.getPosition();
     

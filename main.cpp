@@ -4,13 +4,12 @@
 #include "logging/ConsoleLogger.hpp"
 
 int main() {
-  // init graphics library
   const unsigned int W = 800, H = 600;
   const std::string TITLE = "SFML_IMGUI_TEST";
   
   try
   {
-    Application::Framework framework(W, H, TITLE, new Application::MyApplication());
+    Application::Framework framework(W, H, TITLE, std::make_unique<Application::MyApplication>());
     framework.run();
   }
   catch (std::string err)

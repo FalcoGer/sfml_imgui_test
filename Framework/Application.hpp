@@ -13,7 +13,7 @@ namespace Application
   {
     public:
       Application()
-      : target{new sf::RenderTexture()}, logger{new Logger::ConsoleLogger("Application")}
+      : target{std::make_shared<sf::RenderTexture>()}, logger{std::make_shared<Logger::ConsoleLogger>("Application")}
       {
       }
       
@@ -29,14 +29,14 @@ namespace Application
         [[ unlikely ]]
         if (target->getSize().x != size.x || target->getSize().y != size.y)
         {
-          // only create a new rendertexture if necessary
+          // only create a new render texture if necessary
           target->create(size.x, size.y);
         }
       }
       
       inline void setTarget(std::shared_ptr<sf::RenderTexture> target)
       {
-        this->target = target;
+        this->target = std::move(target);
       }
       
       [[ nodiscard ]]

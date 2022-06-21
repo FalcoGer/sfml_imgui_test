@@ -9,15 +9,13 @@
 
 namespace Application
 {
-  Framework::Framework(const unsigned int W, const unsigned int H, const std::string& TITLE, Application* const application)
+  Framework::Framework(const unsigned int W, const unsigned int H, const std::string& TITLE, std::unique_ptr<Application> application)
   : TARGET_FRAMERATE{60},
     DEFAULT_COLOR{sf::Color(0x10, 0x10, 0x30, 0xFF)},
-    window{new sf::RenderWindow(sf::VideoMode(W, H), TITLE, sf::Style::Default)}
+    window{std::make_shared<sf::RenderWindow>(sf::VideoMode(W, H), TITLE, sf::Style::Default)}
   {
-    this->app = std::unique_ptr<Application>(application);
-    // set up fps counter
-    std::string fontPath = "resources/fonts/MesloLGS NF Regular.ttf";
-    app->getLogger()->log("Font loaded");
+    this->app = std::move(application);
+    const std::string fontPath = "resources/fonts/MesloLGS NF Regular.ttf";
     
     window->setFramerateLimit(TARGET_FRAMERATE);
     

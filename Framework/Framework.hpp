@@ -15,7 +15,7 @@ namespace Application
   class Framework
   {
     public:
-      Framework(const unsigned int W, const unsigned int H, const std::string& TITLE, Application* const application);
+      Framework(const unsigned int W, const unsigned int H, const std::string& TITLE, std::unique_ptr<Application> application);
       ~Framework();
       
       int run();
