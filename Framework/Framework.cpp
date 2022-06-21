@@ -17,27 +17,18 @@ namespace Application
     this->app = std::unique_ptr<Application>(application);
     // set up fps counter
     std::string fontPath = "resources/fonts/MesloLGS NF Regular.ttf";
-    if (!font.loadFromFile(fontPath))
-    {
-      std::string err = fmt::format("Couldn't not load Font: {}", fontPath);
-      app->getLogger()->log(err, Logger::Logger::LogLevel::critical);
-      throw err;
-    }
     app->getLogger()->log("Font loaded");
-    
-    fpsCounter = sf::Text("", font);
-    fpsCounter.setFillColor(sf::Color::Red);
-    fpsCounter.setCharacterSize(12);
     
     window->setFramerateLimit(TARGET_FRAMERATE);
     
     // setup ImGui
-    if (!ImGui::SFML::Init(*window))
+    if (!ImGui::SFML::Init(*window, false))
     {
       std::string err = "Couldn't initialize ImGui";
       app->getLogger()->log(err, Logger::Logger::LogLevel::critical);
       throw err;
     }
+    
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
@@ -48,6 +39,15 @@ namespace Application
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsClassic();
+    
+    // setup font
+    io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 12.0f);
+    if (!ImGui::SFML::UpdateFontTexture())
+    {
+      std::string err = fmt::format("Couldn't update texture atlas, Font file: {}", fontPath);
+      app->getLogger()->log(err, Logger::Logger::LogLevel::critical);
+      throw err;
+    }
     
     // initial draw before run() is running
     window->clear(DEFAULT_COLOR);
@@ -107,8 +107,6 @@ namespace Application
   
   void Framework::update(const sf::Time& elapsed)
   {
-    fpsCounter.setString(fmt::format("{0:>.5} FPS", 1.0f / elapsed.asSeconds()));
-    
     ImGui::SFML::Update(*window, elapsed);
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
     // this needs to be beneath the dockspace generation for it to be dockable
@@ -128,12 +126,10 @@ namespace Application
     app->getTarget()->draw(*app);
     app->getTarget()->display();
     
-    // draw the FPS counter
-    window->draw(fpsCounter);
-    
     // draw the window
     window->clear(DEFAULT_COLOR);
     ImGui::SFML::Render(*window);
+  
     window->display();
   }
 } // Application

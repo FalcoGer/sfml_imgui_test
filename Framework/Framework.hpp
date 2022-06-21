@@ -45,8 +45,6 @@ namespace Application
   
     private:
       sf::Clock clk;
-      sf::Text fpsCounter;
-      sf::Font font;
   };
   
 } // Application
