@@ -8,8 +8,8 @@
 
 namespace Logger {
     
-    void ConsoleLogger::log(const std::string &message, const LogLevel &level, const bool &includeTrace,
-                            const sl &loc) {
+    void ConsoleLogger::log(std::string_view message, const LogLevel& level, const bool& includeTrace,
+                            const sl& loc) {
       this->sink->log(level, Logger::format(message, includeTrace, loc));
     }
     

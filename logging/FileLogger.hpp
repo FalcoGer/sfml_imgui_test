@@ -16,9 +16,9 @@ namespace Logger {
       decltype(spdlog::basic_logger_st<spdlog::async_factory>("", "")) sink;
     protected:
     public:
-      FileLogger(const std::string& name, const std::string& filePath, const bool& truncate = false);
+      FileLogger(const std::string& name, const std::string& filePath, const bool& truncate);
       
-      void log(const std::string &message, const LogLevel& level = LogLevel::info, const bool& includeTrace = false, const sl& loc = sl::current()) override;
+      void log(std::string_view message, const LogLevel& level = LogLevel::info, const bool& includeTrace = false, const sl& loc = sl::current()) override;
   
       inline void setLevel(const LogLevel &level) override
       {

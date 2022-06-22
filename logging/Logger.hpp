@@ -18,15 +18,15 @@ namespace Logger
         typedef std::experimental::source_location sl;
         
         [[nodiscard]]
-        static std::string format(const std::string& message, const bool& includeTrace, const sl& loc);
+        static std::string format(std::string_view message, const bool& includeTrace, const sl& loc);
     public:
         typedef spdlog::level::level_enum LogLevel;
         
-        explicit Logger(std::string  name);
+        explicit Logger(std::string_view name);
         
-        virtual ~Logger() = default;;
+        virtual ~Logger() = default;
 
-        virtual void log(const std::string& message, const LogLevel& level = LogLevel::info, const bool& includeTrace = false, const sl& loc = sl::current()) = 0;
+        virtual void log(std::string_view message, const LogLevel& level = LogLevel::info, const bool& includeTrace = false, const sl& loc = sl::current()) = 0;
         virtual void setLevel(const LogLevel&) = 0;
     
         [[nodiscard]]

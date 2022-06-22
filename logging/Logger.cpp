@@ -6,13 +6,13 @@
 
 namespace Logger
 {
-  Logger::Logger(std::string name)
-    : name{std::move(name)}
+  Logger::Logger(std::string_view name)
+    : name{name}
   {
     
   }
   
-  std::string Logger::format(const std::string& message, const bool& includeTrace, const Logger::sl& loc)
+  std::string Logger::format(std::string_view message, const bool& includeTrace, const Logger::sl& loc)
   {
     if (!includeTrace)
     {

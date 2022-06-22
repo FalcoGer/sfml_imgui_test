@@ -16,7 +16,7 @@ namespace Logger {
         explicit ConsoleLogger(const std::string&);
         ~ConsoleLogger() override;
 
-        void log(const std::string& message, const LogLevel& level = LogLevel::info, const bool& includeTrace = false, const sl& loc = sl::current()) override;
+        void log(std::string_view message, const LogLevel& level = LogLevel::info, const bool& includeTrace = false, const sl& loc = sl::current()) override;
 
         inline void setLevel(const LogLevel &level) override
         {
