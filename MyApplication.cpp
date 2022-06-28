@@ -7,10 +7,15 @@ namespace Application
     bouncySquare{sf::RectangleShape(sf::Vector2f(32.0f, 32.0f))},
     bouncySquareSpeed{100.0f, 60.0f}
   {
-    bouncySquare.setFillColor(sf::Color::White);
+    sf::Color fillColor = sf::Color(0xB0, 0xFF, 0x20);
+    bouncySquare.setFillColor(fillColor);
     bouncySquare.setOutlineColor(sf::Color::Black);
     bouncySquare.setOutlineThickness(4.0f);
     bouncySquare.setPosition(getSize().x/2.0f, getSize().y/2.0f);
+    
+    colorf[0] = static_cast<float>(fillColor.r) / 0xff;
+    colorf[1] = static_cast<float>(fillColor.g) / 0xff;
+    colorf[2] = static_cast<float>(fillColor.b) / 0xff;
   }
   
   void MyApplication::handleEvent(const sf::Event& ev)
@@ -64,8 +69,23 @@ namespace Application
     
     // set new position
     bouncySquare.setPosition(pos);
+    
     // set new color
-    bouncySquare.setFillColor(sf::Color(colorf[0]*0xFF, colorf[1]*0xFF, colorf[2]*0xFF));
+    // create color object to update hue
+    color.SetRGB(colorf[0], colorf[1], colorf[2]);
+    const float huePerSecond = 60.0f;
+    float h = color.GetH();
+    h += huePerSecond * elapsed.asSeconds();
+    [[ unlikely ]]
+    while (h > 360.0f)
+    {
+      h -= 360.0f;
+    }
+    color.SetH(h);
+    colorf[0] = color.GetR();
+    colorf[1] = color.GetG();
+    colorf[2] = color.GetB();
+    bouncySquare.setFillColor(sf::Color(colorf[0]*0xff, colorf[1]*0xff, colorf[2]*0xff));
     
     if (demoWindowOpen)
     {

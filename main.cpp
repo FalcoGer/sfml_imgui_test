@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 
 #include "MyApplication.hpp"
 #include "logging/ConsoleLogger.hpp"
@@ -15,6 +16,11 @@ int main() {
   catch (std::string err)
   {
     Logger::ConsoleLogger("Exception").log(fmt::format("Unhandled Exception: {}", err), Logger::Logger::LogLevel::critical);
+    return 1;
+  }
+  catch (std::exception err)
+  {
+    Logger::ConsoleLogger("Exception").log(fmt::format("Unhandled Exception: {}", err.what()), Logger::Logger::LogLevel::critical);
     return 1;
   }
   

@@ -2,6 +2,7 @@
 
 #include "Framework/Framework.hpp"
 #include "Framework/Application.hpp"
+#include "Framework/Color.hpp"
 
 namespace Application
 {
@@ -21,6 +22,8 @@ namespace Application
       sf::RectangleShape bouncySquare;
       sf::Vector2f bouncySquareSpeed;
       float colorf[3] = {1.0f, 1.0f, 1.0f};
+      
+      Color color;
       
       bool demoWindowOpen;
   };

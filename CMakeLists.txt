@@ -27,7 +27,7 @@ set(APPLICATION_SOURCE_FILES
         Framework/Application.hpp
         MyApplication.cpp
         MyApplication.hpp
-        )
+        Framework/Color.hpp)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
