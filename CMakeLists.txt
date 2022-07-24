@@ -5,15 +5,21 @@ set(CMAKE_CXX_STANDARD 20)
 
 # SFML libraries
 # set(SFML_STATIC_LIBRARIES TRUE)
-find_package(SFML 2.5 COMPONENTS window graphics system REQUIRED)
-find_package(OpenGL REQUIRED)
+set(EXTERNAL_SFML TRUE)
 set(SFML_LIBS sfml-window sfml-graphics sfml-system)
+find_package(SFML 2.5 COMPONENTS window graphics system REQUIRED)
 
+# SPDLOG
 find_package(spdlog REQUIRED)
+
+# FMT
 find_package(fmt REQUIRED)
 
-set(IMGUI_DIR imgui imgui-sfml)
-set(IMGUI_SRC imgui/imgui.cpp imgui/imgui_demo.cpp imgui/imgui_draw.cpp imgui/imgui_tables.cpp imgui/imgui_widgets.cpp imgui-sfml/imgui-SFML.cpp)
+# IMGUI
+find_package(OpenGL REQUIRED) # imgui-sfml depends on opengl 
+set(IMGUI_DIR depends/imgui)
+set(IMGUI_SFML_DIR depends/imgui-sfml)
+set(IMGUI_SRC ${IMGUI_DIR}/imgui.cpp ${IMGUI_DIR}/imgui_demo.cpp ${IMGUI_DIR}/imgui_draw.cpp ${IMGUI_DIR}/imgui_tables.cpp ${IMGUI_DIR}/imgui_widgets.cpp ${IMGUI_SFML_DIR}/imgui-SFML.cpp)
 
 set(APPLICATION_INCLUDE)
 set(APPLICATION_SOURCE_FILES
@@ -35,6 +41,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources
 include_directories(imgui_test
         ${APPLICATION_INCLUDE}
         ${IMGUI_DIR}
+        ${IMGUI_SFML_DIR}
         ${OPENGL_INCLUDE_DIRS}
         )
 

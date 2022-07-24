@@ -5,13 +5,3 @@
 [submodule "imgui-sfml"]
 	path = depends/imgui-sfml
 	url = git@github.com:eliasdaler/imgui-sfml.git
-[submodule "fmt"]
-	path = depends/fmt
-	url = git@github.com:fmtlib/fmt.git
-[submodule "spdlog"]
-	path = depends/spdlog
-	url = git@github.com:gabime/spdlog.git
-[submodule "SFML"]
-	path = depends/SFML
-	url = git@github.com:SFML/SFML.git
-	branch = 2.6.x
