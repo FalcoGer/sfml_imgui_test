@@ -1,17 +1,17 @@
 [submodule "imgui"]
-	path = imgui
+	path = depends/imgui
 	url = git@github.com:ocornut/imgui.git
 	branch = docking
 [submodule "imgui-sfml"]
-	path = imgui-sfml
+	path = depends/imgui-sfml
 	url = git@github.com:eliasdaler/imgui-sfml.git
 [submodule "fmt"]
-	path = fmt
+	path = depends/fmt
 	url = git@github.com:fmtlib/fmt.git
 [submodule "spdlog"]
-	path = spdlog
+	path = depends/spdlog
 	url = git@github.com:gabime/spdlog.git
 [submodule "SFML"]
-	path = SFML
+	path = depends/SFML
 	url = git@github.com:SFML/SFML.git
 	branch = 2.6.x
