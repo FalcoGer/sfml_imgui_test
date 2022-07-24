@@ -19,13 +19,14 @@ namespace Application
     protected:
       void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     private:
-      sf::RectangleShape bouncySquare;
-      sf::Vector2f bouncySquareSpeed;
-      float colorf[3] = {1.0f, 1.0f, 1.0f};
+      sf::RectangleShape m_bouncySquare;
+      sf::Vector2f m_bouncySquareSpeed;
+      float m_colorf[3] = {1.0f, 1.0f, 1.0f};
+    
+      float m_huePerSecond;
+      Color m_color;
       
-      Color color;
-      
-      bool demoWindowOpen;
+      bool m_demoWindowOpen;
   };
   
 } // Application

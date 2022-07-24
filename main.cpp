@@ -1,4 +1,3 @@
-#include <iostream>
 #include <stdexcept>
 
 #include "MyApplication.hpp"
@@ -13,12 +12,12 @@ int main() {
     Application::Framework framework(W, H, TITLE, std::make_unique<Application::MyApplication>());
     framework.run();
   }
-  catch (std::string err)
+  catch (std::string& err)
   {
     Logger::ConsoleLogger("Exception").log(fmt::format("Unhandled Exception: {}", err), Logger::Logger::LogLevel::critical);
     return 1;
   }
-  catch (std::exception err)
+  catch (std::exception& err)
   {
     Logger::ConsoleLogger("Exception").log(fmt::format("Unhandled Exception: {}", err.what()), Logger::Logger::LogLevel::critical);
     return 1;

@@ -20,7 +20,7 @@ namespace Logger {
 
         inline void setLevel(const LogLevel &level) override
         {
-            this->sink->set_level(level);
+            sink->set_level(level);
         }
     };
 

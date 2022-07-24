@@ -9,33 +9,33 @@ namespace Application
   class Color
   {
     public:
-      Color() : r{0.0f}, g{0.0f}, b{0.0f}
+      Color() : _r{0.0f}, _g{0.0f}, _b{0.0f}
       {
       }
       
       Color(float r, float g, float b)
-      : r{r}, g{g}, b{b}
+      : _r{r}, _g{g}, _b{b}
       {
         if (r < 0.0f || r > 1.0f)
         {
-          throw std::range_error("r must be between 0 and 1");
+          throw std::range_error("_r must be between 0 and 1");
         }
         if (g < 0.0f || g > 1.0f)
         {
-          throw std::range_error("g must be between 0 and 1");
+          throw std::range_error("_g must be between 0 and 1");
         }
         if (b < 0.0f || b > 1.0f)
         {
-          throw std::range_error("b must be between 0 and 1");
+          throw std::range_error("_b must be between 0 and 1");
         }
       }
       
       [[ nodiscard ]]
-      inline float GetR() const { return r; }
+      inline float GetR() const { return _r; }
       [[ nodiscard ]]
-      inline float GetG() const { return g; }
+      inline float GetG() const { return _g; }
       [[ nodiscard ]]
-      inline float GetB() const { return b; }
+      inline float GetB() const { return _b; }
       [[ nodiscard ]]
       inline float GetH() const
       {
@@ -48,17 +48,17 @@ namespace Application
           // achromatic
           return 0.0f;
         }
-        else if (isNear(cMax, r))
+        else if (isNear(cMax, _r))
         {
-          return 60.0f * ((g - b) / delta + (g > b ? 0.0f : 6.0f));
+          return 60.0f * ((_g - _b) / delta + (_g > _b ? 0.0f : 6.0f));
         }
-        else if (isNear(cMax, g))
+        else if (isNear(cMax, _g))
         {
-          return 60.0f * (((b - r) / delta) + 2.0f);
+          return 60.0f * (((_b - _r) / delta) + 2.0f);
         }
         else
         {
-          return 60.0f * (((r - g) / delta) + 4.0f);
+          return 60.0f * (((_r - _g) / delta) + 4.0f);
         }
       }
       [[ nodiscard ]]
@@ -89,25 +89,25 @@ namespace Application
       {
         if (r < 0.0f || r > 1.0f)
         {
-          throw std::range_error("r must be between 0 and 1");
+          throw std::range_error("_r must be between 0 and 1");
         }
-        this->r = r;
+        this->_r = r;
       }
       inline void SetG(float g)
       {
         if (g < 0.0f || g > 1.0f)
         {
-          throw std::range_error("g must be between 0 and 1");
+          throw std::range_error("_g must be between 0 and 1");
         }
-        this->g = g;
+        this->_g = g;
       }
       inline void SetB(float b)
       {
         if (b < 0.0f || b > 1.0f)
         {
-          throw std::range_error("b must be between 0 and 1");
+          throw std::range_error("_b must be between 0 and 1");
         }
-        this->b = b;
+        this->_b = b;
       }
       void SetRGB(float r, float g, float b)
       {
@@ -179,30 +179,32 @@ namespace Application
         return {r, g, b};
       }
     private:
-      float r;
-      float g;
-      float b;
+      float _r;
+      float _g;
+      float _b;
       
       [[ nodiscard ]]
       inline float getMax() const
       {
-        if (r > b && r > g) { return r; }
-        if (g > b && g > r) { return g; }
-        return b;
+        if (_r > _b && _r > _g) { return _r; }
+        if (_g > _b && _g > _r) { return _g; }
+        return _b;
       }
     
       [[ nodiscard ]]
       inline float getMin() const
       {
-        if (r < b && r < g) { return r; }
-        if (g < b && g < r) { return g; }
-        return b;
+        if (_r < _b && _r < _g) { return _r; }
+        if (_g < _b && _g < _r) { return _g; }
+        return _b;
       }
     
       [[ nodiscard ]]
       inline static bool isNear(float lhs, float rhs, unsigned char precision = 10)
       {
-        return ((lhs - (1.0f / pow10(precision))) <= rhs) && ((lhs + (1.0f / pow10(precision))) >= rhs);
+        return ((lhs - (1.0f / static_cast<float>(pow10(precision)))) <= rhs) && ((lhs + (1.0f / static_cast<float>(pow10(
+          precision
+        )))) >= rhs);
       }
       
       constexpr inline static long long int pow10(int exp)

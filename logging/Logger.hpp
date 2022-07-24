@@ -14,7 +14,7 @@ namespace Logger
     {
     private:
     protected:
-        const std::string name;
+        const std::string m_name;
         typedef std::experimental::source_location sl;
         
         [[nodiscard]]
@@ -30,7 +30,7 @@ namespace Logger
         virtual void setLevel(const LogLevel&) = 0;
     
         [[nodiscard]]
-        std::string getName() const { return this->name; }
+        std::string getName() const { return m_name; }
     };
 }
 

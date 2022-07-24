@@ -14,7 +14,7 @@ namespace Logger {
     }
     
     ConsoleLogger::ConsoleLogger(const std::string &name)
-        : Logger(name), sink{ std::move(spdlog::stdout_color_mt(name)) } {
+        : Logger(name), sink{ spdlog::stdout_color_mt(name) } {
       this->sink->set_level(LogLevel::info);
     }
     

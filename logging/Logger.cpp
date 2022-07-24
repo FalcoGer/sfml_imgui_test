@@ -7,7 +7,7 @@
 namespace Logger
 {
   Logger::Logger(std::string_view name)
-    : name{name}
+    : m_name{name}
   {
     
   }

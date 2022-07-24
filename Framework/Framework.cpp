@@ -1,30 +1,26 @@
-//
-// Created by paul on 20.06.22.
-//
+#include <stdexcept>
 
 #include "Framework.hpp"
 #include "Application.hpp"
 
-#include "../logging/ConsoleLogger.hpp"
-
 namespace Application
 {
   Framework::Framework(const unsigned int W, const unsigned int H, const std::string& TITLE, std::unique_ptr<Application> application)
-  : TARGET_FRAMERATE{60},
-    DEFAULT_COLOR{sf::Color(0x10, 0x10, 0x30, 0xFF)},
-    window{std::make_shared<sf::RenderWindow>(sf::VideoMode(W, H), TITLE, sf::Style::Default)}
+  : mpt_window{std::make_shared<sf::RenderWindow>(sf::VideoMode(W, H), TITLE, sf::Style::Default)},
+    TARGET_FRAMERATE{60},
+    DEFAULT_COLOR{sf::Color(0x10, 0x10, 0x30, 0xFF)}
   {
-    this->app = std::move(application);
+    this->mpt_app = std::move(application);
     const std::string fontPath = "resources/fonts/MesloLGS NF Regular.ttf";
     
-    window->setFramerateLimit(TARGET_FRAMERATE);
+    mpt_window->setFramerateLimit(TARGET_FRAMERATE);
     
     // setup ImGui
-    if (!ImGui::SFML::Init(*window, false))
+    if (!ImGui::SFML::Init(*mpt_window, false))
     {
       std::string err = "Couldn't initialize ImGui";
-      app->getLogger()->log(err, Logger::Logger::LogLevel::critical);
-      throw err;
+      mpt_app->getLogger()->log(err, Logger::Logger::LogLevel::critical);
+      throw std::runtime_error(err);
     }
     
     ImGui::CreateContext();
@@ -43,29 +39,29 @@ namespace Application
     if (!ImGui::SFML::UpdateFontTexture())
     {
       std::string err = fmt::format("Couldn't update texture atlas, Font file: {}", fontPath);
-      app->getLogger()->log(err, Logger::Logger::LogLevel::critical);
-      throw err;
+      mpt_app->getLogger()->log(err, Logger::Logger::LogLevel::critical);
+      throw std::runtime_error(err);
     }
     
     // initial draw before run() is running
-    window->clear(DEFAULT_COLOR);
-    window->display();
+    mpt_window->clear(DEFAULT_COLOR);
+    mpt_window->display();
     
-    app->getTarget()->clear(DEFAULT_COLOR);
+    mpt_app->getTarget()->clear(DEFAULT_COLOR);
   }
   
   Framework::~Framework()
   {
-    ImGui::SFML::Shutdown(*window);
+    ImGui::SFML::Shutdown(*mpt_window);
   }
   
   int Framework::run()
   {
-    clk.restart();
-    while (this->window->isOpen())
+    m_clk.restart();
+    while (this->mpt_window->isOpen())
     {
       handleEvents();
-      update(clk.restart());
+      update(m_clk.restart());
       draw();
     }
     return 0;
@@ -75,7 +71,7 @@ namespace Application
   {
     sf::Event ev{};
     unsigned int count = 0;
-    while(window->pollEvent(ev))
+    while(mpt_window->pollEvent(ev))
     {
       count++;
       ImGui::SFML::ProcessEvent(ev);
@@ -83,51 +79,52 @@ namespace Application
       {
         case sf::Event::Closed:
         {
-          window->close();
+          mpt_window->close();
           break;
         }
         case sf::Event::Resized:
         {
-          // app resize is handled by "Main" window in update
+          // mpt_app resize is handled by "Main" mpt_window in update
           
-          // prevent distortion when the window is resized
-          window->setView(sf::View(sf::Rect<float>(0,0,ev.size.width, ev.size.height)));
+          // prevent distortion when the mpt_window is resized
+          mpt_window->setView(sf::View(sf::Rect<float>(0, 0, static_cast<float>(ev.size.width),
+                                                       static_cast<float>(ev.size.height))));
         }
         default:
         {
           break;
         }
       }
-      app->handleEvent(ev);
+      mpt_app->handleEvent(ev);
     }
     return count;
   }
   
   void Framework::update(const sf::Time& elapsed)
   {
-    ImGui::SFML::Update(*window, elapsed);
+    ImGui::SFML::Update(*mpt_window, elapsed);
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
     // this needs to be beneath the dockspace generation for it to be dockable
-    app->update(elapsed);
+    mpt_app->update(elapsed);
     
     ImGui::Begin("Main");
     ImVec2 imSize = ImGui::GetContentRegionAvail();
-    app->setSize(sf::Vector2u(imSize.x, imSize.y));
-    ImGui::Image(*(app->getTarget()));
+    mpt_app->setSize(sf::Vector2u(static_cast<unsigned int>(imSize.x), static_cast<unsigned int>(imSize.y)));
+    ImGui::Image(*(mpt_app->getTarget()));
     ImGui::End();
   }
   
   void Framework::draw()
   {
     // draw the application
-    app->getTarget()->clear(DEFAULT_COLOR);
-    app->getTarget()->draw(*app);
-    app->getTarget()->display();
+    mpt_app->getTarget()->clear(DEFAULT_COLOR);
+    mpt_app->getTarget()->draw(*mpt_app);
+    mpt_app->getTarget()->display();
     
-    // draw the window
-    window->clear(DEFAULT_COLOR);
-    ImGui::SFML::Render(*window);
+    // draw the mpt_window
+    mpt_window->clear(DEFAULT_COLOR);
+    ImGui::SFML::Render(*mpt_window);
   
-    window->display();
+    mpt_window->display();
   }
 } // Application

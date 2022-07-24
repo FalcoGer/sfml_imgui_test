@@ -22,19 +22,19 @@ namespace Application
     
       inline void setApplication(std::unique_ptr<Application> application)
       {
-        this->app = std::move(application);
+        this->mpt_app = std::move(application);
       }
       
       [[ nodiscard ]]
       inline std::shared_ptr<sf::RenderWindow> getWindow() const
       {
-        return window;
+        return mpt_window;
       }
   
     protected:
-      std::unique_ptr<Application> app;
+      std::unique_ptr<Application> mpt_app;
       
-      std::shared_ptr<sf::RenderWindow> window;
+      std::shared_ptr<sf::RenderWindow> mpt_window;
     
       const unsigned int TARGET_FRAMERATE;
       const sf::Color DEFAULT_COLOR;
@@ -44,7 +44,7 @@ namespace Application
       void draw();
   
     private:
-      sf::Clock clk;
+      sf::Clock m_clk;
   };
   
 } // Application
